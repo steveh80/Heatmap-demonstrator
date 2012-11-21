@@ -48,7 +48,7 @@
         </div>
         <div class="control-group">
           <div class="controls">
-            <button type="button" class="btn btn-warning" onclick="jqueryCss()">Update Heatmap</button>
+            <button type="submit" class="btn btn-warning" onclick="return jqueryCss()">Update Heatmap</button>
             <button type="button" class="btn" onclick="clearTable()">Clear</button>
           </div>
         </div>
@@ -146,6 +146,8 @@ function jqueryCss() {
   });
 
   $('#jqueryTime').html('jQuery Update took '+ ((new Date().getTime() - float_ts)/1000) + ' sec.');
+
+  return false;
 }
 
 function clearTable() {
