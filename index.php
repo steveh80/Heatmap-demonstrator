@@ -1,9 +1,9 @@
 <?php 
 
-  $numRows = $_REQUEST['numRows'] ? $_REQUEST['numRows'] : 50;
-  $numCols = $_REQUEST['numCols'] ? $_REQUEST['numCols'] : 15;
-  $maxTimePastDays = $_REQUEST['maxTimePastDays'] ? $_REQUEST['maxTimePastDays'] : 90;
-  $defaultDaysValue = 25;
+  $numRows = $_REQUEST['numRows'] ? $_REQUEST['numRows'] : 14;
+  $numCols = $_REQUEST['numCols'] ? $_REQUEST['numCols'] : 55;
+  $maxTimePastDays = $_REQUEST['maxTimePastDays'] ? $_REQUEST['maxTimePastDays'] : 365;
+  $defaultDaysValue = round($maxTimePastDays/3*2);
 
 ?>
 <!DOCTYPE html>
@@ -105,7 +105,7 @@ for ( $i=0; $i<$numRows; $i++) {
   print '<tr>';
   for ( $j=0; $j<$numCols; $j++) {
     $time = randomTime();
-    print '<td lastupdate="' . $time  . '" title="' . date('d.m.y H:i', $time) . ' Uhr">' . date('d.m.y', $time) . '</td>';
+    print '<td lastupdate="' . $time  . '" title="' . date('d.m.y H:i', $time) . ' Uhr">' . rand(1, 6) . '</td>';
   }
   print '</tr>';
 }
@@ -133,7 +133,7 @@ function jqueryCss() {
   var diff = maxTimeToHighlight - minTimeToHighlight;
   
   //reset colors
-  $('td').css('background-color', 'white');
+  $('td').css('background-color', 'rgba(255,255,0,0.5)');
   
   $('td[lastupdate]').filter(function() {
     return $(this).attr("lastupdate") > minTimeToHighlight;
