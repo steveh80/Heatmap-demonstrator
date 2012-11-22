@@ -13,7 +13,7 @@
 <head>    
   <link href="css/bootstrap/bootstrap.css" rel="stylesheet">
   <link href="css/bootstrap/font-awesome.css" rel="stylesheet">
-  <link href="css/chosen.css" rel="stylesheet">
+  <link href="css/jquery-ui.css" rel="stylesheet">
 
   <title>Heatmap Demonstrator</title>
 
@@ -29,6 +29,11 @@
     .thumbnail {
       background-color: white;
     }
+
+    #slider {
+      margin: 10px;
+
+    }
   </style>
 </head>  
   
@@ -40,18 +45,9 @@
     <div class="thumbnail">
       <form class="form-horizontal">
         <legend>Heatmap demonstrator</legend>
-        <div class="control-group">
-          <label class="control-label" for="daysToHighlight">Highlight changes for</label>
-          <div class="controls">
-            <input type="text" id="daysToHighlight" placeholder="Days to highlight" value="<?= $defaultDaysValue ?>"> days
-          </div>
-        </div>
-        <div class="control-group">
-          <div class="controls">
-            <button type="submit" class="btn btn-warning" onclick="return jqueryCss()">Update Heatmap</button>
-            <button type="button" class="btn" onclick="clearTable()">Clear</button>
-          </div>
-        </div>
+        <p>Moving the slider will change the number of days to highlight:</p>
+        <div id="slider"></div>
+        <p id="jqueryTime"></p>
       </form>
     </div>
   </div>
@@ -79,7 +75,7 @@
         </div>
         <div class="control-group">
           <div class="controls">
-            <button type="submit" class="btn">Update table</button>
+            <button type="submit" class="btn btn-warning">Update table</button>
           </div>
         </div>
       </form>
@@ -91,12 +87,12 @@
 <div class="row">
   <div class="span12">
 
-  <p id="jqueryTime">
+  <p>
     <?= ($numCols*$numRows) ?> table cells are displayed. 
     Oldest date in table is <?= date('d.m.Y', time() - $maxTimePastDays * 60 * 60 * 24) ?>
     which is <?= $maxTimePastDays ?> days ago.
   </p>
-
+  
 <table class="table table-hover table-bordered table-condensed">
 <?php
 
@@ -122,7 +118,7 @@ for ( $i=0; $i<$numRows; $i++) {
 </div>
 
 <script src="js/jquery/jquery-1.8.0.min.js"></script>
-<script src="js/jquery/chosen.jquery.min.js"></script>
+<script src="js/jquery/jquery-ui.min.js"></script>
 <script src="js/bootstrap/bootstrap.min.js"></script>
 
 <script>
@@ -131,7 +127,8 @@ function jqueryCss() {
   $('#jqueryTime').html('loading...');
   var float_ts = new Date().getTime();    
 
-  var minTimeToHighlight = Math.round(float_ts / 1000) - $('#daysToHighlight').val() * 60 * 60 * 24;
+  var daysToHighlight = $('#slider').slider('option', 'value');
+  var minTimeToHighlight = Math.round(float_ts / 1000) - daysToHighlight * 60 * 60 * 24;
   var maxTimeToHighlight = Math.round(float_ts / 1000);
   var diff = maxTimeToHighlight - minTimeToHighlight;
   
@@ -145,14 +142,23 @@ function jqueryCss() {
     $(this).css('background-color', 'rgba(255, ' + (255 * (1-multiplier)).toFixed(0) + ', 0, ' + (multiplier/5+0.5) + ')');
   });
 
-  $('#jqueryTime').html('jQuery Update took '+ ((new Date().getTime() - float_ts)/1000) + ' sec.');
+  $('#jqueryTime').html('Highlighting the past <b>' + daysToHighlight + ' days</b>. jQuery Update took '+ ((new Date().getTime() - float_ts)/1000) + ' sec.');
 
-  return false;
+  //return false;
 }
 
 function clearTable() {
   $('td').css('background-color', 'white');
 }
+
+function test() {
+  alert($('#slider').slider('option', 'value'));
+}
+
+$(document).ready(function() {
+  $("#slider").slider({ max: <?= $maxTimePastDays ?>, value : <?= $defaultDaysValue ?>, slide:jqueryCss });
+  jqueryCss();
+});
 
 </script>
 </body>
